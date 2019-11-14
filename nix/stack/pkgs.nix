@@ -8,5 +8,5 @@
         "hie-bios" = (((hackage.hie-bios)."0.2.0").revisions).default;
         } // { ghcide = ./ghcide.nix; }) // {};
       };
-  resolver = "nightly-2019-09-16";
-  }
+  resolver = "lts-14.14";
+}

@@ -2,7 +2,7 @@
 with
   { overlay = _: pkgs:
     let
-      haskellnix = import sources."haskell.nix" { inherit pkgs; };
+      haskellnix = pkgs.haskell-nix;
       mkPackages = ghc:
         let
           pkgSet = haskellnix.mkStackPkgSet {
@@ -22,11 +22,12 @@ with
         let packages = mkPackages ghc;
         in packages.ghcide.components.exes.ghcide;
     in { export = {
-          # ghcide-ghc881 = mkHieCore pkgs.haskell.compiler.ghc881;
-          ghcide-ghc865 = mkHieCore pkgs.haskell.compiler.ghc865;
-          ghcide-ghc864 = mkHieCore pkgs.haskell.compiler.ghc864;
-          ghcide-ghc844 = mkHieCore pkgs.haskell.compiler.ghc844;
-          hie-bios = (mkPackages pkgs.haskell.compiler.ghc865).hie-bios.components.exes.hie-bios;
+          # ghcide-ghc881 = mkHieCore pkgs.haskell-nix.compiler.ghc881;
+          ghcide-ghc865 = mkHieCore pkgs.haskell-nix.compiler.ghc865;
+          ghcide-ghc864 = mkHieCore pkgs.haskell-nix.compiler.ghc864;
+          ghcide-ghc844 = mkHieCore pkgs.haskell-nix.compiler.ghc844;
+          hie-bios = (mkPackages pkgs.haskell-nix.compiler.ghc865).hie-bios.components.exes.hie-bios;
+          haskellnix = haskellnix;
          };
 
          devTools = {
@@ -36,5 +37,12 @@ with
          inherit haskellnix;
       };
   };
+let
+  haskell-nix = import sources."haskell.nix";
+in
 import sources.nixpkgs
-  { overlays = [ overlay ] ; config = {}; inherit system; }
+  {
+    overlays = haskell-nix.overlays ++ [ overlay ];
+    config = haskell-nix.config;
+    inherit system;
+  }
