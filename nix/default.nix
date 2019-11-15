@@ -12,9 +12,7 @@ with
                 packages.ghcide.src = sources.ghcide;
                 ghc.package = ghc; 
                 compiler.version = pkgs.lib.mkForce ghc.version;
-                nonReinstallablePkgs = ["ghc-boot" "binary" "process" "bytestring" "containers" "directory" 
-                   "filepath" "hpc" "ghci" "terminfo" "time" "transformers" "unix" "text"]
-                ++ pkgs.lib.optionals (ghc.version == "8.8.1") [ "contravariant" ];
+                reinstallableLibGhc = true;
             }];
           };
         in pkgSet.config.hsPkgs;
